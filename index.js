@@ -1,68 +1,65 @@
-import makeWASocket,{useMultiFileAuthState} from "@whiskeysockets/baileys"
+```js
+import makeWASocket, { useMultiFileAuthState } from "@whiskeysockets/baileys"
 import qrcode from "qrcode-terminal"
 import fs from "fs"
-import {config} from "./config.js"
+import config from "./config.js"
 
-const plugins = fs.readdirSync("./plugins").filter(v=>v.endsWith(".js"))
+const plugins = fs.readdirSync("./plugins").filter(v => v.endsWith(".js"))
 
-async function startBot(){
+async function startBot() {
 
-const {state, saveCreds} = await useMultiFileAuthState("session")
+const { state, saveCreds } = await useMultiFileAuthState("session")
 
 const sock = makeWASocket({
- auth: state,
- printQRInTerminal:false
+auth: state,
+printQRInTerminal: false
 })
 
 sock.ev.on("creds.update", saveCreds)
 
-sock.ev.on("connection.update", async (update)=>{
+sock.ev.on("connection.update", async (update) => {
 
-const {connection, qr} = update
+const { connection, qr } = update
 
-if(qr){
-qrcode.generate(qr,{small:true})
+if (qr) {
+qrcode.generate(qr, { small: true })
+console.log("Scan QR to connect TEKNOVA_MD")
 }
 
-if(connection === "connecting"){
-
-try{
-
-const code = await sock.requestPairingCode(config.ownerNumber)
-
-console.log("\nPAIRING CODE FOR TEKNOVA MD:", code)
-console.log("Enter code in WhatsApp > Linked Devices")
-
-}catch(e){}
-
-}
-
-if(connection === "close"){
+if (connection === "close") {
+console.log("Reconnecting...")
 startBot()
+}
+
+if (connection === "open") {
+console.log("✅ TEKNOVA_MD CONNECTED")
 }
 
 })
 
-sock.ev.on("messages.upsert", async ({messages})=>{
+sock.ev.on("messages.upsert", async ({ messages }) => {
 
 const msg = messages[0]
-if(!msg.message) return
+if (!msg.message) return
 
-const text = msg.message.conversation || msg.message.extendedTextMessage?.text
-if(!text) return.
+const text =
+msg.message.conversation ||
+msg.message.extendedTextMessage?.text
 
-if(!text.startsWith(config.prefix)) return
+if (!text) return
+
+if (!text.startsWith(config.prefix)) return
 
 const args = text.slice(1).trim().split(" ")
 const cmd = args.shift().toLowerCase()
 
-for(const file of plugins){
+for (const file of plugins) {
 
 const plugin = await import(`./plugins/${file}`)
 
-if(plugin.command.includes(cmd)){
+if (plugin.command.includes(cmd)) {
 
-plugin.default(sock,msg,args,config)
+plugin.default(sock, msg, args, config)
 
 }
 
@@ -73,3 +70,4 @@ plugin.default(sock,msg,args,config)
 }
 
 startBot()
+```
