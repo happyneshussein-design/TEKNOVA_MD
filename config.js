@@ -1,4 +1,4 @@
-export const config = {
+export default {
 
 botname: "TEKNOVA MD ULTRA",
 owner: "SmartWave Tek",
