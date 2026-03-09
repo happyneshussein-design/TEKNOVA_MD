@@ -7,7 +7,7 @@ const { state, saveCreds } = await useMultiFileAuthState("session")
 
 if(!sock.authState.creds.registered){
 
-const phoneNumber = "255XXXXXXXXX"
+const phoneNumber = "255611378027"
 
 const code = await sock.requestPairingCode(phoneNumber)
 
