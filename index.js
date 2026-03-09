@@ -10,6 +10,19 @@ auth: state,
 printQRInTerminal: true
 })
 
+import readline from "readline"
+
+const rl = readline.createInterface({
+input: process.stdin,
+output: process.stdout
+})
+
+rl.question("Enter your WhatsApp number: ", async (number) => {
+
+const code = await sock.requestPairingCode(number)
+console.log("PAIR CODE:", code)
+
+})
 sock.ev.on("creds.update", saveCreds)
 
 sock.ev.on("messages.upsert", async ({ messages }) => {
