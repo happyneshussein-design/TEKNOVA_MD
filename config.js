@@ -1,7 +1,7 @@
 export const config = {
 
 botname: "TEKNOVA MD ULTRA",
-owner: "SmartWave Tech",
+owner: "SmartWave Tek",
 
 // owner WhatsApp number
 ownerNumber: "255611378027",
