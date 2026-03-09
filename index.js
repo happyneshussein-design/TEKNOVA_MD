@@ -5,10 +5,14 @@ import config from "./config.js"
 
 const { state, saveCreds } = await useMultiFileAuthState("session")
 
-const sock = makeWASocket({
-auth: state,
-printQRInTerminal: true
-})
+if(!sock.authState.creds.registered){
+
+const phoneNumber = "255XXXXXXXXX"
+
+const code = await sock.requestPairingCode(phoneNumber)
+
+console.log("PAIR CODE:", code)
+}
 
 import readline from "readline"
 
