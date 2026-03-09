@@ -22,8 +22,7 @@ await sock.sendMessage(from,{text:`
 .antilink
 .antibot
 .warn
-.resetwarn
-.getpp 
+.resetwarn 
 
 ╭─ 🤖 AI
 .ai
